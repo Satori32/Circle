@@ -43,28 +43,30 @@ bool Line(Surface24& S, const Surface24::RGB& Color, Surface24::Cood x0, Surface
 int main() {
 
 	std::random_device rd;
-	std::minstd_rand mr;
+	std::minstd_rand mr(rd());
 	std::mt19937 mt;
 	std::uniform_int_distribution<std::uint16_t> ui(0, 255);
 
-	std::intmax_t C = 128;
-	std::intmax_t L = 127;
+	std::intmax_t C = 16;
+	std::intmax_t L = 120;
 	Surface24 S(256, 256);
 
-	double x1 = -L;
-	double x2 = L;
+	double x1 = 0;
+	double x2 = 0;
 	double y1 = 0;
-	double y2 = 0;
+	double y2 = L;
 	double rad = 3.1415926434/180.0;
 
 	double Angle = 0;
-	for (std::size_t X = 0; X < C+2; X++) {
+	for (std::size_t X = 0; X <= C; X++) {
 		x1 = x2;
 		y1 = y2;
-		x2 = L * std::sin(rad * Angle)+1;
-		y2 = L * std::cos(rad * Angle)+1;
-		Angle += 360.0 / C+90.0;
-		if(X>=2)Line(S, { (std::uint8_t)ui(mr),(std::uint8_t)ui(mr),(std::uint8_t)ui(mr) }, x1+S.Width()/2, y1+S.Height()/2, x2+S.Width()/2, y2+S.Height()/2);
+		x2 = L * std::sin(rad * Angle);
+		y2 = L * std::cos(rad * Angle);
+		//Angle += (360.0) / (C);
+		Angle += (360.0) / (C);
+		Angle = std::fmod(Angle, 360.0);
+		Line(S, { (std::uint8_t)ui(mr),(std::uint8_t)ui(mr),(std::uint8_t)ui(mr) }, x1+S.Width()/2, y1+S.Height()/2, x2+S.Width()/2, y2+S.Height()/2);
 	}
 
 	SaveBMP(S, "test.bmp");
